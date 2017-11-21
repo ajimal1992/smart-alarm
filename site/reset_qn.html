@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Log-in</title>
+    <link rel='stylesheet prefetch' href='css/jquery-ui.css'>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body onload="getSecurityQuestion()">
+	<div class="login-card">
+		<h1>Password Reset</h1><br>
+		<form action="/reset_qn" method="post"> <!--TODO: Secure login-->
+			<h3>Answer the two security questions.</h3>
+			<!--<h4>What is your primary school's name?</h4>-->
+			<input id="sq1" disabled type="text" name="question[sq1]" style="font-weight: bold;">
+			<input id="q1" type="text" name="reset[q1]" placeholder="Type your answer here" required>
+			<!--<h4>What is your secondary school's name?</h4>-->
+			<input id="sq2" disabled type="text" name="question[sq2]" style="font-weight: bold;">
+			<input id="q2" type="text" name="reset[q2]" placeholder="Type your answer here" required>
+			<input type="submit" name="submit" class="login login-submit" value="submit">
+		</form>
+	</div>
+
+	<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+	<script src='js/jquery.min.js'></script>
+	<script src='js/jquery-ui.min.js'></script>
+	<script src="js/custom.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Log-in</title>
+    <link rel='stylesheet prefetch' href='css/jquery-ui.css'>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+<div class="login-card">
+    <h1>Log-in</h1><br>
+    <form action="/reset_pw" method="post">
+        <input type="password" name="reset[pass]" placeholder="Password" required>
+        <input type="submit" name="submit" class="login login-submit" value="Submit">
+    </form>
+    <div>
+        <h4>Password must contain the following:</h4>
+        <p>- Minimum <b>8 characters</b></p>
+        <p>- A <b>lowercase & uppercase</b> letter</p>
+        <p>- A <b>number</b></p>
+        <p>- No <b>spaces</b></p>
+    </div>
+</div>
+
+<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+<script src='js/jquery.min.js'></script>
+<script src='js/jquery-ui.min.js'></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "firedetectionsystem-484d2",
+  "private_key_id": "8981788cea09b5fc9f6758f2c9e66ad07009d3d3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCTwSLJuPoY9w5s\n9C0TmLgAyviBuISKf9NZhVWpIXAyXaF7yCW3AkQwwh1MfQC2wf8ZXy/psCAsWeDd\ndF8SyddSZXWRd074FmIgVfcpYmZs3x2G1wQVInUXHbFa/o5lgqP2uUwRZo6ivFui\nqdUlF/rEdRlAvdjVWqXx7F0cMW/1sWeucL+JvGiyAdpYMy1107lT0jEWP3yNKlIY\nS2/w520VP/kEOb2iP3roKOrWQVhGAs5cEt1iuy9w9EiUcxpqMNY36TRuqnjpb9cp\nuw3CRhIaWrGmYBaup5S/Eia2464WfmJ0bU0Y8U7D9XbByko6IRsm326whDVe1Pb+\npVjV1gORAgMBAAECggEAFcYJpBv2AR1ROyWdieyAux8uEWG5aHaPVPsk5TRoBggN\nvsG/KxGyrlPAwQ+Pvh7nApxoIWIiz55cGI5oX0quyDXq5imkkcMsqTK55leZm/Qi\nNAd2Es493o7x3qSyI8vlcTubtdm87cbfoyAvaJS4z+AovUVs0X4XA8hu7TNs2hIW\nBtpqFCxUr9PZzuQVJWjycPZ4mbjHOLcwPRbapw2+S8XpOS6SGieVEX8KEK8/kgMa\nnDfCJiOXHZ2s+Vr9vLGG9Pg0fKiXRqolGBYAVVz5qjyQEbrpsKfzsjaprpMczQwF\nZV+Q5VOmymk4P5vJJSjpb2iScuHC71el2VrzVAetxQKBgQDJzCzcGjZVWGC3rwtS\naC2F5zbN7mPQS2qCaImjvVE4y+fbMCdpyIucHp6A2ywFzZTEPVbxoae3uQLH6I9u\nABFJeqnV+7rM0ee9232+FLiZc5RARijJZQmVAEoS9i/FfYCzjxGvNsyESL/X7leO\nfGMwqQWBYjohQ83nn1FIgs59XQKBgQC7cOU58juxhWRPngFzztTPpZmMzoFpJAfK\n9f32bhB8aYS6bjdqtqltWPtJZBA7jf7WquvBt2vL0ggwvqhJy9QUap7KF3v6BC73\n1z1Oh0m0cjSQytku/O2VjY+4Dtn56nV9m8t07r1xXnf/Mo4dfp0Js7UE/A71hSdT\n1yVyK2oHxQKBgQCnvHJRZexh1ntWU0ba8cNdOUqBtDT9b6KR0WkPVI8N4dfQht9L\n+6moVH815nhaPn74+2+om9F4Um2wU2vdaGr2I+LF/l9QXu39D1QeysSCsOK65laC\nyNxFIR9xUXd19hMjrblqZedr0bi9ON1Ij7Y3PVdZK5fcDKs7a186IZiX9QKBgC9z\nmiQ8RY5gVY+uUXHO56MVqjSyRqKmY26nLb7ICFZmpBpKMq9KRMQQ5bSjp1RcUypn\nJL3qwFhd+ILWkWX1OuBcSYyhu1oE2xsVG0kZCLisvM/2+lph34efycVvxRD2oP3G\nhhA5LC5aGwi49K9U0U6WdvonEWZoahdYfPtVMEd9AoGBAMUNF1fXBdppRZwkEdgM\nnqZ873kcjp08JNfPD/hEF+8CYh+ewLlZLXvjcHGynYm+Fso9FnQB+g6KnMhyMNOV\ndOfe5+zpVfPGP5CJT2tp1x6w8hZBNcFfIPKTHQ2t9zecbadgHwFW9sb1osPv/xD+\n58SCg+nA39h9UVyIz+vI8QSo\n-----END PRIVATE KEY-----\n",
+  "client_email": "firedetectionsystem-484d2@appspot.gserviceaccount.com",
+  "client_id": "116461409730549431830",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firedetectionsystem-484d2%40appspot.gserviceaccount.com"
+}

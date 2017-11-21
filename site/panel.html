@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!-- TODO: SECURE this page. Redirect unauthorized access -->
+<!-- https://codepen.io/TimQuincey/pen/Dtjox/ -->
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Control Panel</title>
+		
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+		<link rel="stylesheet" href="css/panel.css">
+	</head>
+	
+	<body onload="getUserData()">
+	
+		<div class="container">
+			<ul class="nav nav-pills">
+				<li class="active"><a data-toggle="pill" href="#home">Control Panel</a></li>
+				<li><a data-toggle="pill" href="#menu1">Change Password</a></li>
+				<li><a data-toggle="pill" href="#menu2">Change Security Question</a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="home" class="tab-pane fade in active">
+					<form id="contact" action="/panel" method="post">
+						<div class="head">
+							<h2>Control Panel</h2>
+						</div>
+						<div class="row">
+							<label>Emergency Number: </label>
+							<input id="src" type="number" name="panel[src]" placeholder="Emergency Number" required/ style="width:60%" min=0 max=9999999999><br />
+							<label>Notification Number: </label>
+							<input id="dest" type="number" name="panel[dest]" placeholder="Notification Number" required/ style="width:60%" min=0 max=9999999999><br />
+							<label style="margin-left:13%">Address: </label>
+							<input id="addr" type="text" name="panel[addr]" placeholder="Address" required/ style="width:60%"><br />
+							<label">Introduction Message: </label>
+							<textarea id="intro" type="text" name="panel[intro]" placeholder="Introduction Message" required style="width:60%;"></textarea><br />
+						</div>
+						<button id="submit" type="submit">
+							Update!
+						</button>
+					</form>
+					<div class="row" style="margin-top:-5%">
+						<form id="logout" action="/logout" method="post">
+							<button id="logout" type="submit">Logout</button>
+						</form>
+					</div>
+				</div>
+				<div id="menu1" class="tab-pane fade">
+					<form id="pwd" action="/pwd" method="post">
+						<div class="head">
+							<h2>Change Password</h2>
+						</div>
+						<input type="password" name="resetPass[oldPass]" placeholder="Old Password" required>
+						<input type="password" name="resetPass[newPass]" placeholder="New Password" required>
+						<input type="password" name="resetPass[confirmPass]" placeholder="Confirm Password" required>
+						<button id="changePwd" type="submit">
+							Change Password
+						</button>
+						<div>
+							<h4>Password must contain the following:</h4>
+							<p>- Minimum <b>8 characters</b></p>
+							<p>- A <b>lowercase & uppercase</b> letter</p>
+							<p>- A <b>number</b></p>
+							<p>- No <b>spaces</b></p>
+						</div>
+					</form>
+				</div>
+				<div id="menu2" class="tab-pane fade">
+					<form id="question" action="/sQns" method="post">
+						<div class="head">
+							<h2>Change Security Question</h2>
+						</div>
+						<div>
+							<select name="securityOne">
+							  <option value="What is your primary school name">What is your primary school's name?</option>
+							  <option value="What is your secondary school name">What is your secondary school's name?</option>
+							  <option value="What is your mother maiden name">What is your mother's maiden name?</option>
+							  <option value="What is your nickname">What is your nickname?</option>
+							</select>
+							<!--<input type="text" name="securityOne" placeholder="Answer 1" required>-->
+							<input type="text" name="securityAns[ansOne]" placeholder="Answer 1" required>
+						</div>
+						<div>
+							<select name="securityTwo">
+							  <option value="What is your primary school name">What is your primary school's name?</option>
+							  <option value="What is your secondary school name">What is your secondary school's name?</option>
+							  <option value="What is your mother maiden name">What is your mother's maiden name?</option>
+							  <option value="What is your nickname">What is your nickname?</option>
+							</select>
+							<!--<input type="text" name="securityTwo" placeholder="Answer 1" required>-->
+							<input type="text" name="securityAns[ansTwo]" placeholder="Answer 2" required>
+						</div>
+						<button id="changeQns" type="submit">
+							Save
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+			
+		<script src='js/jquery.min.js'></script>
+		<script src='js/jquery-ui.min.js'></script>
+		<script src="js/custom.js"></script>
+	</body>
+</html>

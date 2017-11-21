@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Log-in</title>
+    <link rel='stylesheet prefetch' href='css/jquery-ui.css'>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+<div class="login-card">
+    <h1>Enter OTP</h1><br>
+    <form action="/otp_verify" method="post">
+        <input type="text" name="otp[token]" placeholder="Enter OTP Token" required>
+        <input type="submit" name="submit" class="login login-submit" value="Submit">
+    </form>
+    <div>
+        <form action="/otp_request" method="post">
+            <input type="submit" name="submit" class="login login-submit" value="Request another OTP">
+        </form>
+    </div>
+</div>
+
+<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+<script src='js/jquery.min.js'></script>
+<script src='js/jquery-ui.min.js'></script>
+</body>
+</html>

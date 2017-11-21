@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Log-in</title>
+		<link rel='stylesheet prefetch' href='css/jquery-ui.css'>
+		<link rel="stylesheet" href="css/login.css">
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+	</head>
+	
+	<script>
+		function check(){
+            var check = false;
+            var response = grecaptcha.getResponse();
+            
+            if(response.length == 0){
+                alert("Please verify Captcha authentication");
+                grecaptcha.reset();
+                location.reload();
+            }
+            else{
+                check = true;
+            }
+            return check;
+        }
+	</script>
+
+	<body>
+		<div class="login-card">
+		<h1>Home-based Fire Detection System</h1><br>
+		<form action="/login" method="post" onSubmit="return check();"> <!--TODO: Secure login-->
+			<input type="text" name="login[user]" placeholder="Username" autocomplete="off" required>
+			<input type="password" name="login[pass]" placeholder="Password" autocomplete="off" required>
+			<input type="submit" name="login" class="login login-submit" value="login">
+            <div class="g-recaptcha" data-sitekey="6LfDJTgUAAAAAH7iDvZdpwMn3YbbnmDxnmGHTf-u"></div>
+		</form>
+		<div>
+			<a href="/reset">Forgot your password?</a>
+		</div>
+		</div>
+
+		<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+		<script src='js/jquery.min.js'></script>
+		<script src='js/jquery-ui.min.js'></script>		
+	</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "name": "smartalarm",
+  "version": "1.0.0",
+  "description": "|-site\r         |-js\r             |-custom.js\r         |-css\r             |-login.css\r             |-panel.css\r         |-index.html\r         |-panel.html\r     |-xml\r         |-response.xml\r     |-package.json\r     |-server.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
+    "dialog": "^0.3.1",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "firebase-admin": "^5.4.3",
+    "helmet": "^3.9.0",
+    "ip": "^1.1.5",
+    "log4js": "^2.3.10",
+    "mysql": "^2.15.0",
+    "moment": "^2.19.1",
+    "notp": "^2.0.3",
+    "password-validator": "^4.0.0",
+    "plivo": "^0.4.1",
+    "randomstring": "^1.1.5",
+    "recaptcha2": "^1.3.2",
+    "serialport": "^5.0.0",
+    "sqlite-cipher": "^0.3.5",
+    "validator": "^9.1.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajimal1992/smart-alarm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ajimal1992/smart-alarm/issues"
+  },
+  "homepage": "https://github.com/ajimal1992/smart-alarm#readme"
+}
