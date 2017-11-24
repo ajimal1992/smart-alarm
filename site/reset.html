@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Log-in</title>
-    <link rel='stylesheet prefetch' href='css/jquery-ui.css'>
-    <link rel="stylesheet" href="css/login.css">
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<title>Log-in</title>
+		<link rel='stylesheet prefetch' href='css/jquery-ui.css'>
+		<link rel="stylesheet" href="css/login.css">
+	</head>
 
-<body>
-<div class="login-card">
-    <h1>Password Reset</h1><br>
-    <form action="/reset" method="post"> <!--TODO: Secure login-->
-        <h3>What is your username?</h3>
-        <input type="text" name="reset[user]" placeholder="username" required>
-        <input type="submit" name="submit" class="login login-submit" value="submit">
-    </form>
-</div>
+	<body>
+	<div class="login-card">
+		<h1>Password Reset</h1><br>
+		<form action="/reset" method="post"> <!--TODO: Secure login-->
+			<h3>What is your username?</h3>
+			<input type="text" name="reset[user]" placeholder="username" required>
+			<input type="submit" name="submit" class="login login-submit" value="submit">
+		</form>
+	</div>
 
-<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
-<script src='js/jquery.min.js'></script>
-<script src='js/jquery-ui.min.js'></script>
+	<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+	<script src='js/jquery.min.js'></script>
+	<script src='js/jquery-ui.min.js'></script>
+	<script src='js/alert.js'></script>
 </body>
 </html>

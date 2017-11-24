@@ -102,7 +102,7 @@ function exeMain() {
         var is2FAEnabled = true;
 
 
-//Password Limiting
+//Form Limiting
         var lock = {
             LOGIN : 0,
             OTP : 1,
@@ -127,7 +127,10 @@ function exeMain() {
             .has().digits()                                 // Must have digits
             .has().not().spaces()                           // Should not have spaces
             .is().not().oneOf(['Password', 'Passw0rd', 'Password123']); // Blacklist these values
-
+			
+		String.prototype.isEmpty = function() {
+			return (this.length === 0 || !this.trim());
+		};
 
 //start server
         server.listen(config.PORT, function () {
@@ -140,13 +143,9 @@ function exeMain() {
         app.get(config.LOGIN_ROUTE, function (req, res) {
             renderView(res,config.LOGIN_FN);
         });
+		
 //trigger controller
         app.post('/trigger', function (req, res) {
-            //console.log("received from RPI");
-            //console.log(req.body);
-			//if(thisSession.hasOwnProperty('merchant_id')){ if time permits
-
-			//}
 			var row = query.get_hwID_user(req.body.hw_id);
 			if(!row) //check hardware exists
 				return;
@@ -168,10 +167,7 @@ function exeMain() {
 					'answer_url': config.xmlResponse,
 					'answer_method': "GET"
 				};
-				//console.log(params);
 				p.make_call(params, function (status, response) {
-					//console.log('Status: ', status);
-					//console.log('API Response:\n', response);
 					liveIntervalObj = setInterval(function () {
 						getLiveCall(response['request_uuid'], row[0]['msg']);
 					}, 1500)
@@ -181,7 +177,6 @@ function exeMain() {
 			if(req.body.msg == config.hb_msg){
 				//heartbeat
 				query.update_TS(req.body.hw_id,req.body.ts);
-				//console.log(query.check_TS());
 			}
         });
 
@@ -195,14 +190,10 @@ function exeMain() {
         app.post(config.LOGIN_ROUTE, function (req, res) {
             req = initRequest(req);
             if (!checkLockStatusReq(lock.LOGIN, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes)) { // If password lock is active,
-                //clearSession(req);
-                res.redirect(config.LOGIN_ROUTE);
+                clearSession(req);
+                res.redirect(config.LOGIN_ROUTE+"?error=Form locked due to multiple failed attempts! Please wait a moment before retrying.");
                 return;
             }
-
-            //console.log("Request IP is: " + req.connection.remoteAddress);
-            //console.log("Received: Username=" + req.body.login.user);
-            //console.log("Received: Password=" + req.body.login.pass);
 
             var input_un = req.body.login.user;
             var input_pw = req.body.login.pass;
@@ -226,7 +217,6 @@ function exeMain() {
 
                 if (is2FAEnabled) {
                     token = notp.totp.gen(OTPkey);     // Time-based OTP, default 30 seconds
-
 
                     req.session.state = config.STATE_OTP; // After successful login, advance session to the next state - OTP
 
@@ -254,7 +244,7 @@ function exeMain() {
             else { //user not found
                 incLockCountReq(lock.LOGIN, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
                 clearSession(req);
-                res.redirect(config.LOGIN_ROUTE);
+                res.redirect(config.LOGIN_ROUTE+"?error=Incorrect login parameters!");
                 logger.trace(req.body.login.user + ' unsuccessful login from ' + ip.address());
             }
         });
@@ -275,11 +265,10 @@ function exeMain() {
             if (req.session.state == config.STATE_OTP && is2FAEnabled == true) {
                 if (!checkLockStatusReq(lock.OTP, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes)) { // If password lock is active,
                     clearSession(req);
-                    res.redirect(config.LOGIN_ROUTE);
+                    res.redirect(config.LOGIN_ROUTE+"?error=Form locked due to multiple failed attempts! Please wait a moment before retrying.");
                     return;
                 }
 
-                //console.log("Received: Username =" + req.body.reset.user);
                 var input_token = req.body.otp.token;
 
                 if (notp.totp.verify(input_token, OTPkey)) { // Token matched
@@ -288,7 +277,7 @@ function exeMain() {
                 }
                 else { // Token not matched
                     incLockCountReq(lock.OTP, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
-                    res.redirect(config.OTP_ROUTE);
+                    res.redirect(config.OTP_ROUTE+"?error=Incorrect OTP!");
                 }
             }
             else {
@@ -300,7 +289,6 @@ function exeMain() {
 //POST OTP controller, requests another OTP
         app.post(config.OTP_REQUEST_ROUTE, function (req, res) {
             if (req.session.state == config.STATE_OTP && is2FAEnabled == true) {
-                //console.log("Received: Username =" + req.body.reset.user);
 
                 var prevToken = token;
                 token = notp.totp.gen(OTPkey);     // Time-based OTP, default 30 seconds
@@ -317,8 +305,11 @@ function exeMain() {
 
                     p.send_message(params, function (status, response) {
                     });
+					res.redirect(config.OTP_ROUTE+"?error=Another OTP has been requested!");
                 }
-                res.redirect(config.OTP_ROUTE);
+				else {
+					res.redirect(config.OTP_ROUTE+"?error=Please wait a moment to request another OTP!");
+				}
             }
             else {
                 clearSession(req);
@@ -337,25 +328,30 @@ function exeMain() {
             req = initRequest(req);
             if (!checkLockStatusReq(lock.USER, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes)) { // If password lock is active,
                 clearSession(req);
-                res.redirect(config.LOGIN_ROUTE);
+                res.redirect(config.LOGIN_ROUTE+"?error=Form locked due to multiple failed attempts! Please wait a moment before retrying.");
                 return;
             }
 
-            //console.log("Received: Username =" + req.body.reset.user);
             var user = req.body.reset.user;
 			req.session.username = user; // Stores the username in the cookie
-			//console.log("AUSER IS: " + user);
 
-            if (query.get_username(user)) { // Is there such a user?
-                req.session.state = config.STATE_RESET_QN; // Advance session to the next stage - security questions
-                req.session.username = user; // Stores the username in the cookie
-                res.redirect(config.RESET_QN_ROUTE); // Redirects user to input security questions
-            }
-            else { //user not found
-                incLockCountReq(lock.USER, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
-                clearSession(req);
-                res.redirect(config.RESET_ROUTE);
-            }
+			if (!user.isEmpty()) {
+				if (query.get_username(user)) { // Is there such a user?
+					req.session.state = config.STATE_RESET_QN; // Advance session to the next stage - security questions
+					req.session.username = user; // Stores the username in the cookie
+					res.redirect(config.RESET_QN_ROUTE); // Redirects user to input security questions
+				}
+				else { //user not found
+					incLockCountReq(lock.USER, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
+					clearSession(req);
+					res.redirect(config.RESET_ROUTE+"?error=Incorrect username!");
+				}
+			}
+			else {
+				incLockCountReq(lock.USER, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
+				clearSession(req);
+				res.redirect(config.RESET_ROUTE+"?error=Incorrect username!");
+			}
         });
 //--------------------------------------------------------------------------------------------//
 //Reset security questions controller
@@ -374,26 +370,30 @@ function exeMain() {
             if (req.session.state == config.STATE_RESET_QN) {    // Requires going through username check first
                 if (!checkLockStatusReq(lock.QN, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes)) { // If password lock is active,
                     clearSession(req);
-                    res.redirect(config.LOGIN_ROUTE);
+                    res.redirect(config.LOGIN_ROUTE+"?error=Form locked due to multiple failed attempts! Please wait a moment before retrying.");
                     return;
                 }
 
                 var username = req.session.username;
                 var q1 = req.body.reset.q1;
                 var q2 = req.body.reset.q2;
-                //console.log("USER IS: " + username);
-
-                if (query.auth_answers(q1, q2, username)) {
-                    req.session.state = config.STATE_RESET_PW; // Move session to the next state - Password
-                    res.redirect(config.RESET_PW_ROUTE);
-                }
-                else { // user not found
-                    incLockCountReq(lock.QN, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
-                    res.redirect(config.RESET_QN_ROUTE); // Retry if wrong answers
-                }
+				
+				if (!q1.isEmpty() && !q2.isEmpty()) {
+					if (query.auth_answers(q1, q2, username)) {
+						req.session.state = config.STATE_RESET_PW; // Move session to the next state - Password
+						res.redirect(config.RESET_PW_ROUTE);
+					}
+					else { // user not found
+						incLockCountReq(lock.QN, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
+						res.redirect(config.RESET_QN_ROUTE+"?error=Incorrect password!"); // Retry if wrong answers
+					}
+				} 
+				else {
+					incLockCountReq(lock.QN, req.session.lockCounts, req.session.lockStatus, req.session.lockTimes);
+					res.redirect(config.RESET_QN_ROUTE+"?error=Incorrect password!"); // Retry if wrong answers
+				}
             }
             else { // Not in the right session state
-                //console.log("Username required");
                 clearSession(req);
                 res.redirect(config.LOGIN_ROUTE); // Redirect if no session
             }
@@ -418,14 +418,13 @@ function exeMain() {
                 if (schema.validate(pw)) {
                     query.update_password(pw, req.session.username);
                     clearSession(req);  // Clears the session
-                    res.redirect(config.LOGIN_ROUTE);
+                    res.redirect(config.LOGIN_ROUTE+"?error=Password resetted successfully! Please login with your new password.");
                 }
                 else { // Password does not conform to specifications.
-                    res.redirect(config.RESET_PW_ROUTE); // Retry if invalid password
+                    res.redirect(config.RESET_PW_ROUTE+"?error=Password does not meet requirements!"); // Retry if invalid password
                 }
             }
             else {
-                //console.log("Username required");
                 clearSession(req);
                 res.redirect(config.LOGIN_ROUTE); // Redirect if no session
             }
@@ -434,12 +433,18 @@ function exeMain() {
 //POST panel controller reset security question
         app.post(config.PANEL_RESET_ROUTE, function (req, res) {
             if (req.session.state == config.STATE_PANEL) {
-                var question1 = req.body.securityAns.ansOne;
-                var question2 = req.body.securityAns.ansTwo;
+                var sa1 = req.body.securityAns.ansOne;
+                var sa2 = req.body.securityAns.ansTwo;
 				var sq1 = req.body.securityOne;
 				var sq2 = req.body.securityTwo;
-				query.update_security(sq1, sq2, question1, question2, req.session.username);
-				res.redirect(config.PANEL_ROUTE+"?error=Question changed sucessfully!");
+				
+				if (!sa1.isEmpty() && !sa2.isEmpty()) {
+					query.update_security(sq1, sq2, sa1, sa2, req.session.username);
+					res.redirect(config.PANEL_ROUTE+"?error=Security questions changed sucessfully!");
+				} 
+				else {
+					res.redirect(config.PANEL_ROUTE+"?error=Invalid answers!");
+				}
             }
             else {
                 clearSession(req);
@@ -469,12 +474,9 @@ function exeMain() {
                 var intro = req.body.panel.intro;
 
                 if (!validator.isNumeric(src) || !validator.isNumeric(dest)) {
-                    //dialog.info("Please enter numeric values!");
 					res.redirect(config.PANEL_ROUTE+"?error=Please enter numeric values!");
                 }
-                else { //validated
-                    //console.log("Received: Source=" + src);
-                    //console.log("Received: Destination=" + dest);
+                else { // validated
                     query.update_user_profile(addr, src, dest, intro, req.session.username);
                     res.redirect(config.PANEL_ROUTE);
                 }
@@ -488,23 +490,25 @@ function exeMain() {
 //POST panel controller reset password
         app.post(config.PWD_ROUTE, function (req, res) {
             if (req.session.state == config.STATE_PANEL) {
-				//var row = query.get_user_auth(req.session.username, oldPwd);
 				var oldPwd = req.body.resetPass.oldPass;
                 var newPwd = req.body.resetPass.newPass;
                 var confirmPwd = req.body.resetPass.confirmPass;
 
 				if (query.get_user_auth(req.session.username, oldPwd)) {
 					if (newPwd != confirmPwd) {
-                    //dialog.warn("Please enter same values!");
-					res.redirect(config.PANEL_ROUTE+"?error=Please enter same values!");
+						res.redirect(config.PANEL_ROUTE+"?error=Passwords are not the same!");
 					} 
 					else { //validated
-						query.update_password(confirmPwd, req.session.username);
-						//dialog.info("Password changed sucessfully!");
-						res.redirect(config.PANEL_ROUTE+"?error=Password changed sucessfully!");
+						 if (schema.validate(newPwd)) {
+							query.update_password(confirmPwd, req.session.username);
+							res.redirect(config.PANEL_ROUTE+"?error=Password changed sucessfully!");
+						 }
+						 else {
+							res.redirect(config.PANEL_ROUTE+"?error=Password does not match requirements.");
+						 }
 					}
 				} else {
-					res.redirect(config.PANEL_ROUTE+"?error=Wrong Password!");
+					res.redirect(config.PANEL_ROUTE+"?error=Enter your current password!");
 				}
 				
             }
@@ -553,11 +557,8 @@ function exeMain() {
 
 
         function getLiveCall(UUID, intro) {
-            //console.log("Received UUID: " + UUID);
             var parameter = {'call_uuid': UUID, 'text': intro, 'language': 'en-GB'};
             p.speak(parameter, function (status, response) {
-                //console.log('\nSpeak Status: ', status);
-                //console.log('Speak Response:\n', response);
                 if (status != 404) {
                     clearInterval(liveIntervalObj);
                 }
@@ -566,7 +567,6 @@ function exeMain() {
 
         function initRequest(req) {
             if (!req.session.isSessionInit) {
-                //console.log("Init request");
                 req.session.lockCounts = lockCounts.slice(0);
                 req.session.lockTimes = lockTimes.slice(0);
                 req.session.lockStatus = lockStatus.slice(0);
@@ -580,13 +580,11 @@ function exeMain() {
                 var locktime = times[index];
                 if (checkLockTimesReq(locktime)) { // 5 seconds
                     // Release lock
-                    //console.log("Release lock");
                     status[index] = false;
                     count[index] = 0;
                     return true;
                 }
                 else {
-                    //console.log("Lock active");
                     return false;
                 }
             }
@@ -607,11 +605,9 @@ function exeMain() {
 
         function incLockCountReq(index, counts, status, times) {
             counts[index] = counts[index] + 1;
-            //console.log("Increment count");
             //Count increased
             if (counts[index] >= lockRate) {
                 //Lock activated
-                //console.log("Activate lock");
                 status[index] = true;
                 times[index] = new Date();
             }
@@ -621,27 +617,27 @@ function exeMain() {
             req.session.username = null;
             req.session.state = null;
         }
+		
+		//initialize captcha
+		reCAPTCHA=require('recaptcha2')
 
-        //initialize captcha
-reCAPTCHA=require('recaptcha2')
+		recaptcha=new reCAPTCHA({
+		  siteKey: config.CAPTCHA_SITEKEY,
+		  secretKey: config.CAPTCHA_SECRETKEY
+		})
 
-recaptcha=new reCAPTCHA({
-  siteKey: config.CAPTCHA_SITEKEY,
-  secretKey: config.CAPTCHA_SECRETKEY
-})
-
-//verify captcha key
-function submitForm(req,res){
-  recaptcha.validateRequest(req)
-  .then(function(){
-    // validated and secure
-    res.json({formSubmit:true})
-  })
-  .catch(function(errorCodes){
-    // invalid
-    res.json({formSubmit:false,errors:recaptcha.translateErrors(errorCodes)});// translate error codes to human readable text
-  });
-}
+		//verify captcha key
+		function submitForm(req,res){
+		  recaptcha.validateRequest(req)
+		  .then(function(){
+			// validated and secure
+			res.json({formSubmit:true})
+		  })
+		  .catch(function(errorCodes){
+			// invalid
+			res.json({formSubmit:false,errors:recaptcha.translateErrors(errorCodes)});// translate error codes to human readable text
+		  });
+		}
 
 //check heartbeat
 var hb_interval = setInterval(function () {
@@ -671,8 +667,8 @@ var hb_interval = setInterval(function () {
 				}, 1000*60*2); //check every 2 mins
 
 //-------------------------------------------------------------------------------
-        clearInterval(executeMain); //break off from the main execution time loop
-    } //end of if
+		clearInterval(executeMain); //break off from the main execution time loop
+	} //end of if
 }
 
 var executeMain;
