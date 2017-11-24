@@ -11,14 +11,14 @@
 	<div class="login-card">
 		<h1>Password Reset</h1><br>
 		<form action="/reset_qn" method="post"> <!--TODO: Secure login-->
-			<h3>Answer the two security questions.</h3>
+			<h3>Answer these two security questions.</h3>
 			<!--<h4>What is your primary school's name?</h4>-->
-			<input id="sq1" disabled type="text" name="question[sq1]" style="font-weight: bold;">
-			<input id="q1" type="text" name="reset[q1]" placeholder="Type your answer here" required>
+			<input id="sq1" disabled type="text" name="question[sq1]" style="font-weight: bold; width:310px">
+			<input id="q1" type="text" name="reset[q1]" style="width:310px" placeholder="Type your answer here" required>
 			<!--<h4>What is your secondary school's name?</h4>-->
-			<input id="sq2" disabled type="text" name="question[sq2]" style="font-weight: bold;">
-			<input id="q2" type="text" name="reset[q2]" placeholder="Type your answer here" required>
-			<input type="submit" name="submit" class="login login-submit" value="submit">
+			<input id="sq2" disabled type="text" name="question[sq2]" style="font-weight: bold; width:310px">
+			<input id="q2" type="text" name="reset[q2]" style="width:310px" placeholder="Type your answer here" required>
+			<input type="submit" name="submit" style="width:310px" class="login login-submit" value="submit">
 		</form>
 	</div>
 

@@ -11,7 +11,7 @@ body {
 
 .login-card {
   padding: 40px;
-  width: 274px;
+  width: 300px;
   background-color: #F7F7F7;
   margin: 0 auto 10px;
   border-radius: 2px;
@@ -31,12 +31,19 @@ body {
   font-size: 2.3em;
 }
 
+.login-card h3{
+  text-align: center;
+  width: 320px;
+}
+
 .login-card input[type=submit] {
   width: 100%;
   display: block;
   margin-bottom: 10px;
   position: relative;
 }
+
+
 
 .login-card input[type=text], input[type=password] {
   height: 44px;

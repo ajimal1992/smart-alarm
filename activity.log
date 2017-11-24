@@ -147,3 +147,7 @@
 [2017-11-11 14:02:47.580] [TRACE] activity - ict3x03 successful login from 192.168.0.189
 [2017-11-11 14:10:57.846] [TRACE] activity - ict3x03 successful login from 192.168.0.189
 [2017-11-11 15:15:14.014] [TRACE] activity - ict3x03 successful login from 192.168.56.1
+[2017-11-25 06:29:17.087] [TRACE] activity - ict3x03 unsuccessful login from 192.168.56.1
+[2017-11-25 06:29:30.124] [TRACE] activity - ict3x03 unsuccessful login from 192.168.56.1
+[2017-11-25 06:30:02.680] [TRACE] activity - ict3x03 successful login from 192.168.56.1
+[2017-11-25 06:37:09.915] [TRACE] activity - ict3x03 successful login from 192.168.56.1
