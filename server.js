@@ -125,7 +125,7 @@ function exeMain() {
             .has().uppercase()                              // Must have uppercase letters
             .has().lowercase()                              // Must have lowercase letters
             .has().digits()                                 // Must have digits
-            .has().not().spaces()                           // Should not have spaces
+			.has().symbols()								// Must have symbols
             .is().not().oneOf(['Password', 'Passw0rd', 'Password123']); // Blacklist these values
 			
 		String.prototype.isEmpty = function() {
@@ -414,8 +414,8 @@ function exeMain() {
         app.post(config.RESET_PW_ROUTE, function (req, res) {
             if (req.session.state == config.STATE_RESET_PW) {    // Requires going through sec qn check first
                 var pw = req.body.reset.pass;
-
-                if (schema.validate(pw)) {
+				
+                if (schema.validate(pw) && !pw.isEmpty()) {
                     query.update_password(pw, req.session.username);
                     clearSession(req);  // Clears the session
                     res.redirect(config.LOGIN_ROUTE+"?error=Password resetted successfully! Please login with your new password.");
@@ -499,7 +499,7 @@ function exeMain() {
 						res.redirect(config.PANEL_ROUTE+"?error=Passwords are not the same!");
 					} 
 					else { //validated
-						 if (schema.validate(newPwd)) {
+						 if (schema.validate(newPwd) && !newPwd.isEmpty()) {
 							query.update_password(confirmPwd, req.session.username);
 							res.redirect(config.PANEL_ROUTE+"?error=Password changed sucessfully!");
 						 }

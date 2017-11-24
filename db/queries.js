@@ -64,7 +64,6 @@ exports.get_sec_qns = function(username, index) { // Finds if username is in db
 exports.auth_answers = function(a1,a2,username) {
     var row = sqlite.run("SELECT sec_ans1, sec_ans2 FROM profile_info WHERE username = ?", [username]);
     if (row.length == 1) {//username found
-        console.log("Answer = " + row[0]['sec_ans1']);
         if (a1 == row[0]["sec_ans1"] && a2 == row[0]["sec_ans2"])
             return true;
         else //user not found
