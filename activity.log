@@ -151,3 +151,12 @@
 [2017-11-25 06:29:30.124] [TRACE] activity - ict3x03 unsuccessful login from 192.168.56.1
 [2017-11-25 06:30:02.680] [TRACE] activity - ict3x03 successful login from 192.168.56.1
 [2017-11-25 06:37:09.915] [TRACE] activity - ict3x03 successful login from 192.168.56.1
+[2017-11-25T21:03:18.176] [TRACE] activity - ict3x03 unsuccessful login from 192.168.46.1
+[2017-11-25T21:03:45.992] [TRACE] activity - ict3x03 unsuccessful login from 192.168.46.1
+[2017-11-25T21:04:08.140] [TRACE] activity - ict3x03 successful login from 192.168.46.1
+[2017-11-25T21:49:23.081] [TRACE] activity - ict3x03 successful login from 192.168.46.1
+[2017-11-25T21:50:42.356] [TRACE] activity - ict3x03 unsuccessful login from 192.168.46.1
+[2017-11-25T21:51:40.002] [TRACE] activity - ' OR 1=1-- unsuccessful login from 192.168.46.1
+[2017-11-25T21:51:56.448] [TRACE] activity - ' OR 1=1-- successful login from 192.168.46.1
+[2017-11-25T21:53:39.386] [TRACE] activity - ' OR 1=1-- unsuccessful login from 192.168.46.1
+[2017-11-25T21:59:32.700] [TRACE] activity - ' OR 1=1-- unsuccessful login from 192.168.46.1

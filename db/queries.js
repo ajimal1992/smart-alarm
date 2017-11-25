@@ -100,6 +100,13 @@ exports.alter_db_table = function() {
     //sqlite.run("ALTER TABLE profile_info ADD sec_ans2 TEXT");
     //sqlite.run("UPDATE profile_info SET sec_q1 = ?, sec_q2 = ?, sec_ans1 = ?, sec_ans2 = ? WHERE username = 'ict3x03'",
     //    ["What is the first answer", "What is the second answer", "ans1", "ans2"]);
+	console.log(sqlite.run("ALTER TABLE profile_info ADD usr_key TEXT"));
+	console.log(sqlite.run("UPDATE profile_info SET usr_key = ? WHERE username = 'ict3x03'",
+		["8B991015802298091211BA2FE1CF4F9C"]));
+}
+
+exports.get_key = function(username){
+	return sqlite.run("SELECT usr_key FROM profile_info WHERE username = ?",[username]);
 }
 
 exports.update_TS = function(hw_id,ts){

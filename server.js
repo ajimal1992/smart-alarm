@@ -50,7 +50,6 @@ function exeMain() {
         var bodyParser = require('body-parser');
         var path = require('path');
         var validator = require('validator');
-        var dialog = require('dialog');
         var app = express();
 
 //Helmet Securing
@@ -131,7 +130,14 @@ function exeMain() {
 		String.prototype.isEmpty = function() {
 			return (this.length === 0 || !this.trim());
 		};
+		
+//crypto 
+		var crypto = require('crypto');
+		var CryptoJS = require("crypto-js");
 
+// token controller
+		var token_issuer = new Array();
+			
 //start server
         server.listen(config.PORT, function () {
             console.log('Server listening at port %d', 55555);
@@ -146,10 +152,27 @@ function exeMain() {
 		
 //trigger controller
         app.post('/trigger', function (req, res) {
-			var row = query.get_hwID_user(req.body.hw_id);
+			//get user key
+			var usr_key = query.get_key(req.body.usr)[0]['usr_key'];
+			
+			//first, decrypt the message
+			var plain_iv =  new Buffer( req.body.IV , 'base64').toString('hex');
+			var iv = CryptoJS.enc.Hex.parse( plain_iv );
+			var key= CryptoJS.enc.Hex.parse( usr_key );
+			//decrypt
+			var bytes  = CryptoJS.AES.decrypt( req.body.enc_msg, key , { iv: iv} );
+			var plaintext = bytes.toString(CryptoJS.enc.Base64);
+			var decoded_b64msg =  new Buffer(plaintext , 'base64').toString('ascii');
+			var decoded_msg = new Buffer( decoded_b64msg , 'base64').toString('ascii');
+			var datas = decoded_msg.trim().split(":"); //hw_id: datas[0], msg: datas[1], token: datas[2]
+			if(datas.length != 3) //ensure correct data
+				return;
+				
+			var row = query.get_hwID_user(datas[0]);
 			if(!row) //check hardware exists
 				return;
 				
+			/*
 			//check timestamp
 			var formatted = moment().format('YYYY-MM-DD HH-mm-ss');
 			var now = moment(formatted, 'YYYY-MM-DD HH-mm-ss');
@@ -158,9 +181,20 @@ function exeMain() {
 			if(secondsDiff<-60 || secondsDiff >0){ //1 min grace
 				console.log("Denied");
 				return;
-			}	
-			
-			if(req.body.msg == config.detection_msg){
+			}
+			*/
+			//Check token
+			var index = token_issuer.indexOf(datas[2]);
+			if(index>-1){
+				token_issuer.splice(index, 1);
+				//console.log("Token " + datas[2] + " deleted. Exec line: 0x01");
+			}
+			else{
+				console.log("Denied"); 
+				return; //drop packet
+			}
+				
+			if(datas[1] == config.detection_msg){
 				var params = {
 					'to': row[0]['dest_num'],
 					'from': row[0]['src_num'],
@@ -174,16 +208,28 @@ function exeMain() {
 				});
 			}
             
-			if(req.body.msg == config.hb_msg){
+			if(datas[1] == config.hb_msg){
 				//heartbeat
-				query.update_TS(req.body.hw_id,req.body.ts);
+				var formatted = moment().format('YYYY-MM-DD HH-mm-ss');
+				query.update_TS(datas[0],formatted);
 			}
         });
 
-//timestamp controller
+//timestamp controller (although it says timestamp, its actually a token.)
 		app.get('/timestamp', function (req, res) {
-			var formatted = moment().format('YYYY-MM-DD HH-mm-ss');
-			res.send(formatted);
+			//var formatted = moment().format('YYYY-MM-DD HH-mm-ss');
+			var rand_token = crypto.randomBytes(9).toString('hex');
+			//res.send(formatted);
+			token_issuer.push(rand_token);
+			//console.log("Token " + rand_token + " issued. Exec line: 0x11");
+			setTimeout(function(){
+				var index = token_issuer.indexOf(rand_token)
+				if(index>-1){
+					token_issuer.splice(index, 1);
+					//console.log("Token " + rand_token + " deleted. Exec line: 0x12");
+				}
+			},60000); //token expires in 60 seconds
+			res.send(rand_token);
 		});
 		
 //POST login controller -
