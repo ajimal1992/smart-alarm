@@ -542,8 +542,6 @@ function exeMain() {
                 var JSON = {
                     'sq1': row[0]['sec_q1'],
                     'sq2': row[0]['sec_q2'],
-					'q1': row[0]['sec_ans1'],
-                    'q2': row[0]['sec_ans2']
                 };
                 res.send(JSON);
 			}
