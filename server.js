@@ -112,7 +112,7 @@ function exeMain() {
         var lockTimes = [0,0,0,0];
         var lockStatus = [false, false, false, false];
         var lockRate = 3; // 3 attempts before global lockout
-        var lockDelay = 15; // Lock for x seconds
+        var lockDelay = 300; // Lock for x seconds
 
 
 // Password validation
@@ -120,7 +120,7 @@ function exeMain() {
         var schema = new passwordValidator();
         schema
             .is().min(8)                                    // Minimum length 8
-            .is().max(50)                                   // Maximum length 50
+            .is().max(64)                                   // Maximum length 50
             .has().uppercase()                              // Must have uppercase letters
             .has().lowercase()                              // Must have lowercase letters
             .has().digits()                                 // Must have digits
@@ -148,6 +148,7 @@ function exeMain() {
 //login controller 
         app.get(config.LOGIN_ROUTE, function (req, res) {
             renderView(res,config.LOGIN_FN);
+			req.session.state = config.STATE_LOGIN;
         });
 		
 //trigger controller
@@ -243,6 +244,7 @@ function exeMain() {
 
             var input_un = req.body.login.user;
             var input_pw = req.body.login.pass;
+			req.session.state = config.STATE_LOGIN;
 
             //Get ip address
             var ip = require('ip');
